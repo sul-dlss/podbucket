@@ -1,5 +1,7 @@
 # podbucket
 
+[![Tests](https://github.com/sul-dlss/podbucket/actions/workflows/test.yml/badge.svg)](https://github.com/sul-dlss/podbucket/actions/workflows/test.yml)
+
 podbucket is a command line utility for converting POD MARC data into Parquet files and storing them in a Amazon S3 bucket for use in data analysis tools like Spark, Presto, or services like AWS Athena.
 
 ## Install
