@@ -2,7 +2,7 @@ import typer
 from rich import print
 from rich.progress import track
 
-from typing_extensions import Annotated, Any
+from typing_extensions import Annotated
 from humanize import naturalsize
 
 from podbucket.config import get_config
