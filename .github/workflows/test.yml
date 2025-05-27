@@ -29,3 +29,5 @@ jobs:
 
     - name: Run tests
       run: uv run pytest -v
+      env:
+        PODBUCKET_POD_TOKEN: ${{ secrets.PODBUCKET_POD_TOKEN }}
