@@ -2,7 +2,7 @@ import typer
 from rich import print
 from rich.progress import track
 
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Any
 from humanize import naturalsize
 
 from podbucket.config import get_config
@@ -37,7 +37,7 @@ def resources(
     stream.
     """
     get_config()
-    streams = []
+    streams = {}
 
     if name:
         url = get_streams().get(name)

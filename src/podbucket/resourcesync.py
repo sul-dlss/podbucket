@@ -33,28 +33,43 @@ def get_streams() -> dict:
     streams = {}
     for sitemap in doc.findall("sitemap:sitemap", namespaces):
         loc = sitemap.find("sitemap:loc", namespaces)
-        org = re.search(r"organizations/(.+?)/", loc.text).group(1)
+        if loc is None or loc.text is None:
+            raise Exception("Missing <loc> element in sitemap index")
+
+        if match := re.search(r"organizations/(.+?)/", loc.text):
+            org = match.group(1)
+        else:
+            raise Exception(f"Missing organization name in URL {loc.text}")
+
         streams[org] = loc.text
 
     return streams
 
 
-def get_resources(url: str) -> list[Resource]:
-    doc = get_xml(url)
+def get_resources(sitemap_url: str) -> list[Resource]:
+    doc = get_xml(sitemap_url)
 
     resources = []
     for url in doc.findall("sitemap:url", namespaces):
+        lastmod = url.find("sitemap:lastmod", namespaces)
+        if lastmod is None or lastmod.text is None:
+            raise Exception(f"Missing <lastmod> in {url}")
+
+        loc = url.find("sitemap:loc", namespaces)
+        if loc is None or loc.text is None:
+            raise Exception(f"Missing <loc> URL in {url}")
+
         md = url.find("rs:md", namespaces)
-        loc = url.find("sitemap:loc", namespaces).text
-        lastmod = url.find("sitemap:lastmod", namespaces).text
+        if md is None or loc is None or lastmod is None:
+            raise Exception(f"Invalid ResourceSync resource in {url}")
 
         resources.append(
             Resource(
-                url=loc,
+                url=loc.text,
                 mediatype=md.attrib["type"],
                 length=int(md.attrib["length"]),
                 fixity=md.attrib["hash"],
-                lastmod=datetime.datetime.fromisoformat(lastmod),
+                lastmod=datetime.datetime.fromisoformat(lastmod.text),
             )
         )
 
