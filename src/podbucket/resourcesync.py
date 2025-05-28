@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 import xml.etree.ElementTree as ET
 
@@ -77,12 +78,34 @@ def get_resources(sitemap_url: str) -> list[Resource]:
 
 
 def get_xml(url: str) -> ET.Element:
+    """
+    Get the XML at a URL, parse it, and return the document.
+    """
     resp = get(url)
     resp.raise_for_status()
 
     return ET.fromstring(resp.text)
 
 
-def get(url) -> httpx.Response:
+def get(url: str) -> httpx.Response:
+    """
+    Get a POD URL and return the response.
+    """
+    return httpx.get(url, headers=_headers(), timeout=60)
+
+
+def download(url: str, path: Path) -> Path:
+    """
+    Download a POD URL to a given path.
+    """
+    with path.open("wb") as output:
+        with httpx.stream("GET", url, headers=_headers(), timeout=60) as resp:
+            for data in resp.iter_bytes():
+                output.write(data)
+
+    return path
+
+
+def _headers():
     token = os.environ.get("PODBUCKET_POD_TOKEN")
-    return httpx.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=60.0)
+    return {"Authorization": f"Bearer {token}"}

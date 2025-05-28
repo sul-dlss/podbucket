@@ -10,10 +10,13 @@ dependencies = [
   "typer>=0.16.0",
   "python-dotenv>=1.1.0",
   "humanize>=4.12.3",
+  "boto3>=1.38.24",
 ]
 
 [dependency-groups]
 dev = [
+    "boto3-stubs[s3,sts]>=1.38.25",
+    "moto[s3,sts]>=5.1.5",
     "mypy>=1.15.0",
     "pytest>=8.3.4",
     "ruff>=0.9.6",
@@ -34,7 +37,7 @@ packages = ["src/podbucket"]
 
 [tool.pytest.ini_options]
 log_cli = true
-log_cli_level = "INFO"
+log_cli_level = "WARNING"
 pythonpath = [
     "src"
 ]

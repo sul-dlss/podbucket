@@ -22,3 +22,12 @@ def test_get_resources():
     assert resources[0].mediatype
     assert resources[0].length
     assert resources[0].fixity
+
+
+def test_download(tmp_path):
+    test_file = resourcesync.download(
+        "https://pod.stanford.edu/file/475329/stanford-2025-05-26-delta-marcxml.xml.gz",
+        tmp_path / "test.xml.gz",
+    )
+    assert test_file.is_file()
+    assert test_file.stat().st_size == 20573

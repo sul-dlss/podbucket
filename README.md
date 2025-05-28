@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/sul-dlss/podbucket/actions/workflows/test.yml/badge.svg)](https://github.com/sul-dlss/podbucket/actions/workflows/test.yml)
 
-podbucket is a command line utility for converting [POD](https://pod.stanford.edu/) MARC data into Parquet files and storing them in an Amazon S3 bucket for use in data analysis tools like Spark, Presto, or services like AWS Athena.
+podbucket is a command line utility for converting [POD](https://pod.stanford.edu/) MARC XML data into Parquet files and storing them in an Amazon S3 bucket for use in data analysis tools like Spark, Presto, or services like AWS Athena.
 
 ## Install
 
