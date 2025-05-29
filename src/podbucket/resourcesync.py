@@ -108,4 +108,6 @@ def download(url: str, path: Path) -> Path:
 
 def _headers():
     token = os.environ.get("PODBUCKET_POD_TOKEN")
+    if token is None:
+        raise Exception("PODBUCKET_POD_TOKEN env var isn't set!")
     return {"Authorization": f"Bearer {token}"}

@@ -1,9 +1,5 @@
 from podbucket import resourcesync
 
-import dotenv
-
-dotenv.load_dotenv()
-
 
 def test_get_streams():
     streams = resourcesync.get_streams()
