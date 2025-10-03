@@ -11,6 +11,7 @@ dependencies = [
   "python-dotenv>=1.1.0",
   "humanize>=4.12.3",
   "boto3>=1.38.24",
+  "sickle>=0.7.0",
 ]
 
 [dependency-groups]
