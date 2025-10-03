@@ -17,7 +17,6 @@ def test_list_records() -> None:
             rec.find(".//oai:header/oai:datestamp", namespaces=XML_NS).text
         )
         assert ds >= yesterday, f"timestamp is after {yesterday.isoformat()}"
-        breakpoint()
 
         # if the status for the record is "deleted" we can skip looking for the metadata
         if (
