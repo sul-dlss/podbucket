@@ -1,12 +1,14 @@
+from pathlib import Path
+
 import typer
+from humanize import naturalsize
 from rich import print
 from rich.progress import track
-
 from typing_extensions import Annotated
-from humanize import naturalsize
 
 from podbucket.config import get_config
-from podbucket.resourcesync import get_streams, get_resources
+from podbucket.convert import marcxml_to_parquet
+from podbucket.resourcesync import get_resources, get_streams
 
 app = typer.Typer()
 
@@ -29,7 +31,7 @@ def streams():
 
 @app.command()
 def resources(
-    name: Annotated[str, typer.Argument(help="The short organization name")] = "",
+    org: Annotated[str, typer.Argument(help="The organization name")] = "",
     verbose: Annotated[bool, typer.Option(help="Print resources")] = False,
 ):
     """
@@ -37,19 +39,10 @@ def resources(
     stream.
     """
     get_config()
-    streams = {}
-
-    if name:
-        url = get_streams().get(name)
-        if not url:
-            print("[bold red]No organization for {name}[/bold red]")
-            raise typer.Exit(code=1)
-        streams = {name: url}
-    else:
-        streams = get_streams()
+    streams = get_streams(org)
 
     items = size = 0
-    for name, stream_url in track(streams.items(), description="Fetching streams..."):
+    for org, stream_url in track(streams.items(), description="Fetching streams..."):
         for resource in get_resources(stream_url):
             if verbose:
                 print(resource)
@@ -61,8 +54,16 @@ def resources(
 
 
 @app.command()
-def convert():
-    print("Converting")
+def convert(
+    output_dir: Annotated[Path, typer.Option(exists=True, file_okay=False)],
+    org: Annotated[str, typer.Option(help="Organization name")] = None,
+):
+    get_config()
+
+    for org, stream_url in get_streams(org).items():
+        for resource in track(get_resources(stream_url), description=org):
+            if resource.mediatype == "application/gzip":
+                marcxml_to_parquet(resource.url, output_dir)
 
 
 if __name__ == "__main__":

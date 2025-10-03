@@ -11,12 +11,12 @@ from podbucket.resourcesync import download
 logger = logging.getLogger(__name__)
 
 
-def convert_marcxml(marcxml_url: str, storage_root: Path):
+def marcxml_to_parquet(marcxml_url: str, output_dir: Path):
     filename = marcxml_url.split("/")[-1]
 
-    marcxml_gz_path = storage_root / filename
-    marcxml_path = storage_root / re.sub(r"\.xml.gz$", ".xml", filename)
-    parquet_path = storage_root / re.sub(r"\.xml\.gz$", ".parquet", filename)
+    marcxml_gz_path = output_dir / filename
+    marcxml_path = output_dir / re.sub(r"\.xml.gz$", ".xml", filename)
+    parquet_path = output_dir / re.sub(r"\.xml\.gz$", ".parquet", filename)
 
     logger.info(f"downloading {marcxml_url} to {marcxml_gz_path}")
     download(marcxml_url, marcxml_gz_path)

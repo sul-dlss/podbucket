@@ -3,6 +3,7 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 import xml.etree.ElementTree as ET
 
@@ -23,9 +24,11 @@ class Resource:
     lastmod: datetime.datetime
 
 
-def get_streams() -> dict:
+def get_streams(name: Optional[str] = None) -> dict:
     """
-    Returns a dictionary that maps organization names to their stream url.
+    Returns a dictionary that maps organization names to their stream url. If an
+    organization name is passed in the dictionary will only contain stream
+    information for that organization.
     """
     doc = get_xml(
         "https://pod.stanford.edu/organizations/normalized_resourcelist/marcxml"
@@ -42,7 +45,8 @@ def get_streams() -> dict:
         else:
             raise Exception(f"Missing organization name in URL {loc.text}")
 
-        streams[org] = loc.text
+        if name == org or name is None:
+            streams[org] = loc.text
 
     return streams
 

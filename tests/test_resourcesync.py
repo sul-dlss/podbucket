@@ -3,6 +3,14 @@ from podbucket import resourcesync
 
 def test_get_streams():
     streams = resourcesync.get_streams()
+    assert len(streams) == 18
+    assert (
+        streams["stanford"]
+        == "https://pod.stanford.edu/organizations/stanford/streams/2024-08-27/normalized_resourcelist/marcxml"
+    )
+
+    streams = resourcesync.get_streams("stanford")
+    assert len(streams) == 1
     assert (
         streams["stanford"]
         == "https://pod.stanford.edu/organizations/stanford/streams/2024-08-27/normalized_resourcelist/marcxml"
