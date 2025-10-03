@@ -56,7 +56,7 @@ def resources(
 @app.command()
 def convert(
     output_dir: Annotated[Path, typer.Option(exists=True, file_okay=False)],
-    org: Annotated[str, typer.Option(help="Organization name")] = None,
+    org: Annotated[str, typer.Option(help="Organization name")],
 ):
     get_config()
 
